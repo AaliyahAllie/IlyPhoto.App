@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "133654489841",
+    "project_id": "photostudio-8d84a",
+    "storage_bucket": "photostudio-8d84a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133654489841:android:599250ad81c50fc6539750",
+        "android_client_info": {
+          "package_name": "com.example.ilyphoto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3Bi5-90Z6gTTsMUKEvATDGd9lBJtXOKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
