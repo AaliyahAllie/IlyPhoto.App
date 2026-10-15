@@ -56,6 +56,41 @@ data class Booking(
     val invoiceNumber: String = "",
     val invoiceStatus: String = "Unpaid", // Unpaid, Partially Paid, Paid
     @ServerTimestamp val createdAt: Date? = null,
+) {
+    fun toInvoice(): Invoice = Invoice(
+        invoiceId = invoiceNumber.ifBlank { "INV-" + id.take(6).uppercase() },
+        bookingId = id,
+        clientId = clientId,
+        clientName = clientName,
+        clientEmail = clientEmail,
+        clientPhone = clientPhone,
+        serviceName = serviceName,
+        eventDate = eventDate,
+        eventTime = eventTime,
+        eventLocation = eventLocation,
+        totalAmount = servicePrice,
+        issueDate = eventDate,
+        dueDate = "Due on confirmation",
+        status = invoiceStatus.ifBlank { "Unpaid" }
+    )
+}
+
+/** Task 1 ERD Entity: Invoice (FR14, FR15, FR16, FR17). */
+data class Invoice(
+    val invoiceId: String = "",
+    val bookingId: String = "",
+    val clientId: String = "",
+    val clientName: String = "",
+    val clientEmail: String = "",
+    val clientPhone: String = "",
+    val serviceName: String = "",
+    val eventDate: String = "",
+    val eventTime: String = "",
+    val eventLocation: String = "",
+    val totalAmount: Int = 0,
+    val issueDate: String = "",
+    val dueDate: String = "",
+    val status: String = "Unpaid", // Unpaid, Partially Paid, Paid, Overdue
 )
 
 /** Firestore document in `enquiries/{id}` (Enquiry entity from Task 1 ERD). */

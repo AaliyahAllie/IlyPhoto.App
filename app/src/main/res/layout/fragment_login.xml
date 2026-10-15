@@ -103,8 +103,10 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:hint="Email Address"
+                    android:textColor="#212121"
+                    android:textColorHint="#757575"
                     android:inputType="textEmailAddress"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:singleLine="true" />
 
                 <TextView
@@ -113,7 +115,7 @@
                     android:text="Please enter your password"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
-                    android:layout_marginTop="10dp" />
+                    android:layout_marginTop="14dp" />
 
                 <EditText
                     android:id="@+id/passwordInput"
@@ -124,8 +126,10 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:hint="Password"
+                    android:textColor="#212121"
+                    android:textColorHint="#757575"
                     android:inputType="textPassword"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:singleLine="true" />
 
                 <!-- Remember me and forgot password -->
@@ -134,7 +138,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="12dp">
 
                     <Switch
                         android:id="@+id/rememberMeSwitch"
@@ -151,57 +155,19 @@
                         android:layout_weight="1"
                         android:text="Remember me"
                         android:textColor="#FFFFFF"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/forgotPassword"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Forgot password?"
-                        android:textColor="#161211"
-                        android:textSize="10sp"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
                         android:padding="6dp"
                         android:clickable="true"
                         android:focusable="true" />
-
-                </LinearLayout>
-
-                <!-- OR divider -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="OR"
-                    android:textColor="#FFFFFF"
-                    android:textSize="10sp"
-                    android:gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- Google sign-in visual only -->
-                <LinearLayout
-                    android:id="@+id/googleSignInButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:background="@drawable/google_button_background"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="G"
-                        android:textColor="#4285F4"
-                        android:textStyle="bold"
-                        android:textSize="21sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="  Sign in with Google"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp" />
 
                 </LinearLayout>
 

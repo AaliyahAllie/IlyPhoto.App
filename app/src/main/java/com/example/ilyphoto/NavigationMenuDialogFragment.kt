@@ -45,6 +45,7 @@ class NavigationMenuDialogFragment : DialogFragment() {
         val itemHome = view.findViewById<TextView>(R.id.menuItemHome)
         val itemGallery = view.findViewById<TextView>(R.id.menuItemGallery)
         val itemBookings = view.findViewById<TextView>(R.id.menuItemBookings)
+        val itemInvoices = view.findViewById<TextView>(R.id.menuItemInvoices)
         val itemPackages = view.findViewById<TextView>(R.id.menuItemPackages)
         val btnLogOut = view.findViewById<TextView>(R.id.btnMenuLogOut)
 
@@ -70,6 +71,10 @@ class NavigationMenuDialogFragment : DialogFragment() {
 
         itemBookings?.setOnClickListener {
             navigateTo(R.id.action_global_to_myBookingFragment)
+        }
+
+        itemInvoices?.setOnClickListener {
+            navigateTo(R.id.action_global_to_invoiceFragment)
         }
 
         itemPackages?.setOnClickListener {

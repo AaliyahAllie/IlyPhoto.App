@@ -256,20 +256,42 @@
 
     </LinearLayout>
 
+    <!-- "Save Changes" Pill Button -->
+    <TextView
+        android:id="@+id/btnSaveProfile"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/login_button_background"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:text="Save Profile Changes"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.03"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnProfileLogOut" />
+
     <!-- "Log Out" Pill Button -->
     <TextView
         android:id="@+id/btnProfileLogOut"
         android:layout_width="0dp"
-        android:layout_height="46dp"
+        android:layout_height="44dp"
         android:layout_marginStart="36dp"
         android:layout_marginEnd="36dp"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/button_red_background"
         android:elevation="4dp"
         android:gravity="center"
         android:text="@string/log_out"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="17sp"
         android:textStyle="bold"
         android:letterSpacing="0.03"
         android:clickable="true"
@@ -291,9 +313,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- Search Tab -->
+        <!-- Home Tab -->
         <FrameLayout
-            android:id="@+id/navSearch"
+            android:id="@+id/navHome"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -305,8 +327,8 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_search"
-                android:contentDescription="@string/search" />
+                android:src="@drawable/ic_home"
+                android:contentDescription="@string/home" />
         </FrameLayout>
 
         <!-- Settings Tab -->

@@ -136,6 +136,100 @@ class BookingRepository {
         booking
     }
 
+    suspend fun getBookingById(bookingId: String): Booking? {
+        val currentList = bookings().firstOrNull().orEmpty()
+        return currentList.firstOrNull { it.id == bookingId }
+            ?: localBookings.value.firstOrNull { it.id == bookingId }
+    }
+
+    /**
+     * Updates an existing booking in-place (reschedule / edit). Does not create a duplicate booking.
+     */
+    suspend fun updateBooking(
+        bookingId: String,
+        serviceName: String,
+        servicePrice: Int,
+        durationHours: Int,
+        eventDate: String,
+        eventTime: String = "14:00",
+        eventLocation: String,
+        requirements: String,
+        clientPhone: String? = null,
+    ): Result<Booking> = firebaseCall {
+        val currentList = bookings().firstOrNull().orEmpty()
+        val conflicting = currentList.any { existing ->
+            existing.id != bookingId &&
+                existing.eventDate.equals(eventDate.trim(), ignoreCase = true) &&
+                existing.status !in listOf("Cancelled", "Rejected")
+        }
+        if (conflicting) {
+            error(
+                "OOPS! Looks like there is already an event booked on $eventDate. " +
+                    "Please select a different date."
+            )
+        }
+
+        val existing = currentList.firstOrNull { it.id == bookingId }
+            ?: localBookings.value.firstOrNull { it.id == bookingId }
+            ?: error("Booking not found.")
+
+        val updated = existing.copy(
+            serviceName = serviceName.trim(),
+            servicePrice = servicePrice,
+            durationHours = durationHours,
+            eventDate = eventDate.trim(),
+            eventTime = eventTime.trim(),
+            eventLocation = eventLocation.trim(),
+            requirements = requirements.trim(),
+            clientPhone = clientPhone?.trim()?.ifEmpty { existing.clientPhone } ?: existing.clientPhone,
+            status = if (existing.eventDate != eventDate.trim()) "Rescheduled" else existing.status
+        )
+
+        localBookings.value = localBookings.value.map {
+            if (it.id == bookingId) updated else it
+        }.let { list ->
+            if (list.any { it.id == bookingId }) list else listOf(updated) + list
+        }
+
+        val updates = mapOf<String, Any>(
+            "serviceName" to updated.serviceName,
+            "servicePrice" to updated.servicePrice,
+            "durationHours" to updated.durationHours,
+            "eventDate" to updated.eventDate,
+            "eventTime" to updated.eventTime,
+            "eventLocation" to updated.eventLocation,
+            "requirements" to updated.requirements,
+            "clientPhone" to updated.clientPhone,
+            "status" to updated.status
+        )
+
+        val writeTask = FirebaseProvider.db.collection(BOOKINGS).document(bookingId).update(updates)
+        withTimeoutOrNull(1500L) {
+            runCatching { writeTask.await() }
+        }
+        updated
+    }
+
+    /**
+     * Cancels an existing booking if it has not been paid.
+     */
+    suspend fun cancelBooking(booking: Booking): Result<Unit> = firebaseCall {
+        if (booking.invoiceStatus.equals("Paid", ignoreCase = true)) {
+            error("Paid bookings cannot be cancelled via the app. Please contact ILY PHOTO directly.")
+        }
+        val updated = booking.copy(status = "Cancelled")
+        localBookings.value = localBookings.value.map {
+            if (it.id == booking.id) updated else it
+        }
+
+        val writeTask = FirebaseProvider.db.collection(BOOKINGS).document(booking.id)
+            .update("status", "Cancelled")
+        withTimeoutOrNull(1500L) {
+            runCatching { writeTask.await() }
+        }
+        Unit
+    }
+
     suspend fun updateBookingStatus(
         booking: Booking,
         newStatus: String,
@@ -176,6 +270,19 @@ class BookingRepository {
             }
 
             val writeTask = FirebaseProvider.db.collection(BOOKINGS).document(booking.id)
+                .update("invoiceStatus", newInvoiceStatus)
+            withTimeoutOrNull(1500L) {
+                runCatching { writeTask.await() }
+            }
+            Unit
+        }
+
+    suspend fun updateInvoiceStatusById(bookingId: String, newInvoiceStatus: String): Result<Unit> =
+        firebaseCall {
+            localBookings.value = localBookings.value.map {
+                if (it.id == bookingId) it.copy(invoiceStatus = newInvoiceStatus) else it
+            }
+            val writeTask = FirebaseProvider.db.collection(BOOKINGS).document(bookingId)
                 .update("invoiceStatus", newInvoiceStatus)
             withTimeoutOrNull(1500L) {
                 runCatching { writeTask.await() }

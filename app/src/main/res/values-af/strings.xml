@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">IlyPhoto</string>
+    <string name="home">TUIS</string>
+    <string name="ily_photo_title">ILY FOTO.</string>
+    <string name="capturing_every_moment">VANG ELKE OOMBLIK VAS</string>
+    <string name="upcoming_event">KOMENDE GELEENTHEID</string>
+    <string name="sample_booking">BESPREKING: 04 SEPTEMBER</string>
+    <string name="more">MEER</string>
+    <string name="view_bookings">SIEN BESPREKINGS</string>
+    <string name="search">Soek</string>
+    <string name="settings">Stellings</string>
+    <string name="menu">Kieslys</string>
+
+    <!-- Profile -->
+    <string name="profile">Profiel</string>
+    <string name="first_name">Voornaam</string>
+    <string name="last_name">Van</string>
+    <string name="email_address">E-posadres</string>
+    <string name="contact_details">Kontakbesonderhede</string>
+    <string name="log_out">Teken Uit</string>
+
+    <!-- Packages -->
+    <string name="packages">PAKKETTE</string>
+    <string name="matric_balls">MATRIEKAFSKOP</string>
+    <string name="matric_balls_price">R400 VIR 2 URE</string>
+    <string name="weddings">TROUES</string>
+    <string name="weddings_price">VANAF R1200 VIR 6 URE</string>
+    <string name="events">GELEENTHEDE</string>
+    <string name="events_price">R400 VIR 2 URE</string>
+    <string name="book">BESPREEK</string>
+
+    <!-- Booking -->
+    <string name="booking">BESPREKING</string>
+    <string name="select_a_date">Kies \'n datum</string>
+    <string name="make_booking">Maak Bespreking</string>
+    <string name="conflict_oops">OEPS!</string>
+    <string name="conflict_message">DIT LYK OF DAAR REEDS \'N GELEENTHEID BESPREEK IS.\nKIES ASSEBLIEF \'N ANDER DATUM</string>
+    <string name="close">MAAK TOE</string>
+
+    <!-- My Booking -->
+    <string name="my_booking">MY BESPREKINGS</string>
+    <string name="details">BESONDERHEDE</string>
+    <string name="event_type_label">SOORT GELEENTHEID:</string>
+    <string name="location_label">LIGGING:</string>
+    <string name="price_label">PRYS:</string>
+    <string name="payment_details_label">BETALINGSBESONDERHEDE:</string>
+    <string name="edit">WYSIG</string>
+    <string name="make_a_booking">MAAK \'N BESPREKING</string>
+
+    <!-- Gallery -->
+    <string name="gallery">GALERY</string>
+    <string name="event_name">NAAM VAN GELEENTHEID</string>
+    <string name="download_full_gallery">Laai volledige Galery af</string>
+
+    <!-- Invoices -->
+    <string name="invoices">FAKTUUR</string>
+    <string name="invoices_plural">FAKTURE</string>
+    <string name="view_invoices">SIEN FAKTUUR</string>
+    <string name="no_invoices">NOG GEEN FAKTURE</string>
+    <string name="invoice_empty_desc">Bespreek \'n fotografiesessie om jou amptelike faktuur hier te sien.</string>
+    <string name="download_invoice">LAAI FAKTUUR AF</string>
+    <string name="copy_bank_details">KOPIEER BANKBESONDERHEDE</string>
+    <string name="mark_as_paid">MERK AS BETAAL</string>
+    <string name="record_payment">BOEK BETALING</string>
+
+    <!-- Navigation Menu -->
+    <string name="navigation">Navigasie</string>
+    <string name="home_screen">Tuisskerm</string>
+    <string name="bookings_menu">Besprekings</string>
+    <string name="invoices_menu">Fakture</string>
+</resources>

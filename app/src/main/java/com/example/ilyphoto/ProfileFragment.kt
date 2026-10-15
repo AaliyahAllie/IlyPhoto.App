@@ -1,5 +1,7 @@
 package com.example.ilyphoto
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -7,18 +9,28 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.ilyphoto.data.ServiceLocator
 import com.example.ilyphoto.data.UserProfile
-import com.example.ilyphoto.data.UserRole
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private var currentProfile: UserProfile? = null
+    private var ivProfileAvatar: ImageView? = null
+
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            val prefs = requireContext().getSharedPreferences("ily_photo_prefs", Context.MODE_PRIVATE)
+            prefs.edit().putString("custom_avatar_uri", uri.toString()).apply()
+            ivProfileAvatar?.setImageURI(uri)
+            Toast.makeText(requireContext(), "Profile picture updated successfully!", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,11 +40,23 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val etEmail = view.findViewById<EditText>(R.id.etProfileEmail)
         val etPhone = view.findViewById<EditText>(R.id.etProfilePhone)
 
-        val btnLogOut = view.findViewById<TextView>(R.id.btnProfileLogOut)
+        val profileAvatar = view.findViewById<ImageView>(R.id.profileAvatar)
         val btnEditAvatar = view.findViewById<ImageView>(R.id.btnEditAvatar)
-        val navSearch = view.findViewById<FrameLayout>(R.id.navSearch)
+        val btnSaveProfile = view.findViewById<TextView>(R.id.btnSaveProfile)
+        val btnLogOut = view.findViewById<TextView>(R.id.btnProfileLogOut)
+
+        val navHome = view.findViewById<FrameLayout>(R.id.navHome)
         val navSettings = view.findViewById<FrameLayout>(R.id.navSettings)
         val navMenu = view.findViewById<FrameLayout>(R.id.navMenu)
+
+        ivProfileAvatar = profileAvatar
+
+        // Load saved profile picture
+        val prefs = requireContext().getSharedPreferences("ily_photo_prefs", Context.MODE_PRIVATE)
+        val savedAvatarUri = prefs.getString("custom_avatar_uri", null)
+        if (!savedAvatarUri.isNullOrBlank()) {
+            runCatching { profileAvatar?.setImageURI(Uri.parse(savedAvatarUri)) }
+        }
 
         // Live observation of user profile from Firebase Firestore
         viewLifecycleOwner.lifecycleScope.launch {
@@ -56,35 +80,43 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             }
         }
 
+        // Pick photo on avatar click or edit button click
+        val avatarClickListener = View.OnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+        profileAvatar?.setOnClickListener(avatarClickListener)
+        btnEditAvatar?.setOnClickListener(avatarClickListener)
+
+        btnSaveProfile?.setOnClickListener {
+            val prof = currentProfile
+            val updatedName = "${etFirstName?.text?.toString()?.trim()} ${etLastName?.text?.toString()?.trim()}".trim()
+            val updatedPhone = etPhone?.text?.toString()?.trim().orEmpty()
+
+            if (prof != null) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    ServiceLocator.auth.updateProfileDetails(
+                        current = prof,
+                        displayName = updatedName.ifBlank { prof.displayName },
+                        username = prof.username,
+                        phone = updatedPhone,
+                        address = prof.address,
+                        role = prof.role
+                    )
+                    Toast.makeText(requireContext(), "Profile changes saved successfully!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(requireContext(), "Profile changes saved locally!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         btnLogOut?.setOnClickListener {
             ServiceLocator.auth.signOut()
             Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_global_to_loginFragment)
         }
 
-        btnEditAvatar?.setOnClickListener {
-            val prof = currentProfile
-            if (prof != null) {
-                val updatedName = "${etFirstName?.text?.toString()?.trim()} ${etLastName?.text?.toString()?.trim()}".trim()
-                val updatedPhone = etPhone?.text?.toString()?.trim().orEmpty()
-                viewLifecycleOwner.lifecycleScope.launch {
-                    ServiceLocator.auth.updateProfileDetails(
-                        current = prof,
-                        displayName = updatedName,
-                        username = prof.username,
-                        phone = updatedPhone,
-                        address = prof.address,
-                        role = prof.role
-                    )
-                    Toast.makeText(requireContext(), "Profile updated in Firebase!", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(requireContext(), "Change profile picture", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        navSearch?.setOnClickListener {
-            findNavController().navigate(R.id.action_global_to_searchFragment)
+        navHome?.setOnClickListener {
+            findNavController().navigate(R.id.action_global_to_homeFragment)
         }
 
         navSettings?.setOnClickListener {

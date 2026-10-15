@@ -52,8 +52,20 @@
     <string name="event_name">EVENT NAME</string>
     <string name="download_full_gallery">Download full Gallery</string>
 
+    <!-- Invoices -->
+    <string name="invoices">INVOICE</string>
+    <string name="invoices_plural">INVOICES</string>
+    <string name="view_invoices">VIEW INVOICE</string>
+    <string name="no_invoices">NO INVOICES YET</string>
+    <string name="invoice_empty_desc">Book a photography package to receive and view your invoice here.</string>
+    <string name="download_invoice">DOWNLOAD INVOICE</string>
+    <string name="copy_bank_details">COPY BANK DETAILS</string>
+    <string name="mark_as_paid">MARK AS PAID</string>
+    <string name="record_payment">RECORD PAYMENT</string>
+
     <!-- Navigation Menu -->
     <string name="navigation">Navigation</string>
     <string name="home_screen">Home Screen</string>
     <string name="bookings_menu">Bookings</string>
+    <string name="invoices_menu">Invoices</string>
 </resources>

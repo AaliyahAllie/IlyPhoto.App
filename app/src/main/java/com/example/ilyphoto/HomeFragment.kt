@@ -1,8 +1,11 @@
 package com.example.ilyphoto
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -18,13 +21,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val btnTopProfile = view.findViewById<View>(R.id.btnTopProfile)
+        val ivTopAvatar = view.findViewById<ImageView>(R.id.ivTopProfileAvatar)
+
+        // Load custom avatar if saved
+        val prefs = requireContext().getSharedPreferences("ily_photo_prefs", Context.MODE_PRIVATE)
+        val savedAvatarUri = prefs.getString("custom_avatar_uri", null)
+        if (!savedAvatarUri.isNullOrBlank()) {
+            runCatching { ivTopAvatar?.setImageURI(Uri.parse(savedAvatarUri)) }
+        }
+
+        btnTopProfile?.setOnClickListener {
+            findNavController().navigate(R.id.action_global_to_profileFragment)
+        }
+
         val homeTagline = view.findViewById<TextView>(R.id.homeTagline)
         val tvUpcomingEventLabel = view.findViewById<TextView>(R.id.tvUpcomingEventLabel)
         val tvBookingDate = view.findViewById<TextView>(R.id.tvBookingDate)
         val btnMore = view.findViewById<TextView>(R.id.btnMore)
         val btnViewBookings = view.findViewById<TextView>(R.id.btnViewBookings)
 
-        val navSearch = view.findViewById<FrameLayout>(R.id.navSearch)
+        val navHome = view.findViewById<FrameLayout>(R.id.navHome)
         val navSettings = view.findViewById<FrameLayout>(R.id.navSettings)
         val navMenu = view.findViewById<FrameLayout>(R.id.navMenu)
 
@@ -70,8 +87,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(R.id.action_homeFragment_to_myBookingFragment)
         }
 
-        navSearch?.setOnClickListener {
-            findNavController().navigate(R.id.action_global_to_searchFragment)
+        navHome?.setOnClickListener {
+            // Already on Home screen
         }
 
         navSettings?.setOnClickListener {

@@ -1,14 +1,17 @@
 package com.example.ilyphoto
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -31,6 +34,18 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
         val prefs = requireContext().getSharedPreferences("ily_photo_prefs", Context.MODE_PRIVATE)
 
+        val btnTopProfile = view.findViewById<View>(R.id.btnTopProfile)
+        val ivTopAvatar = view.findViewById<ImageView>(R.id.ivTopProfileAvatar)
+
+        val savedAvatarUri = prefs.getString("custom_avatar_uri", null)
+        if (!savedAvatarUri.isNullOrBlank()) {
+            runCatching { ivTopAvatar?.setImageURI(Uri.parse(savedAvatarUri)) }
+        }
+
+        btnTopProfile?.setOnClickListener {
+            findNavController().navigate(R.id.action_global_to_profileFragment)
+        }
+
         val switchDarkMode = view.findViewById<SwitchCompat>(R.id.switchDarkMode)
         val cardLanguage = view.findViewById<View>(R.id.cardLanguage)
         val tvCurrentLanguage = view.findViewById<TextView>(R.id.tvCurrentLanguage)
@@ -41,7 +56,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val btnStudioTerms = view.findViewById<TextView>(R.id.btnStudioTerms)
         val btnSettingsLogOut = view.findViewById<TextView>(R.id.btnSettingsLogOut)
 
-        val navSearch = view.findViewById<FrameLayout>(R.id.navSearch)
+        val navHome = view.findViewById<FrameLayout>(R.id.navHome)
         val navSettings = view.findViewById<FrameLayout>(R.id.navSettings)
         val navMenu = view.findViewById<FrameLayout>(R.id.navMenu)
 
@@ -69,11 +84,18 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 .setSingleChoiceItems(languages, currentIndex) { dialog, which ->
                     val chosen = languages[which]
                     tvCurrentLanguage?.text = chosen
-                    prefs.edit().putString("selected_language", chosen).apply()
                     dialog.dismiss()
 
+                    val langTag = if (which == 1) "af" else "en"
+                    prefs.edit()
+                        .putString("selected_language", chosen)
+                        .putString("selected_language_tag", langTag)
+                        .apply()
+
+                    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(langTag))
+
                     val greeting = when (which) {
-                        1 -> "Taal verander na Afrikaans. Welkom by Ily Photo!"
+                        1 -> "Taal verander na Afrikaans. Welkom by Ily Foto!"
                         2 -> "Ulwimi lutshintshiwe lwaba sisiXhosa. Wamkelekile!"
                         3 -> "Ulimi lushintshelwe kusiZulu. Siyakwamukela!"
                         else -> "Language set to English (South Africa)."
@@ -146,8 +168,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
 
         // 7. Bottom Navigation
-        navSearch?.setOnClickListener {
-            findNavController().navigate(R.id.action_global_to_searchFragment)
+        navHome?.setOnClickListener {
+            findNavController().navigate(R.id.action_global_to_homeFragment)
         }
 
         navSettings?.setOnClickListener {
